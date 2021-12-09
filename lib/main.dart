@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'Screens/mufta.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -31,6 +33,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  bool isShowMuftu = true;
 
   void _incrementCounter() {
     setState(() {
@@ -44,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
+      body: isShowMuftu ? MuftaScreen() : Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
