@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'Models/mainmodels.dart';
 import 'Screens/mufta.dart';
 
 void main() {
@@ -34,6 +35,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   bool isShowMuftu = true;
+  Mufta mufta = Mufta();
 
   void _incrementCounter() {
     setState(() {
@@ -42,12 +44,22 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
+  void initState() {
+    //mufta.cables = [];
+    mufta.cables!.add(CableEnd(fibersNumber: 8, direction: 'Федько/Лукачева'));
+    mufta.cables!.add(CableEnd(fibersNumber: 16, direction: 'Школа 15'));
+    //mufta.connections = [];
+    mufta.connections!.add(Connection(cableEndX: mufta.cables![0], fiberNumberX: 1, cableEndY: mufta.cables![1], fiberNumberY: 1));
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: isShowMuftu ? MuftaScreen() : Center(
+      body: isShowMuftu ? MuftaScreen(mufta: mufta) : Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
