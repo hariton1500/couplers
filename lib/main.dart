@@ -46,12 +46,17 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     //mufta.cables = [];
-    mufta.cables!.add(CableEnd(fibersNumber: 8, direction: 'Федько/Лукачева', sideIndex: 0));
-    mufta.cables!.add(CableEnd(fibersNumber: 16, direction: 'Школа 15', sideIndex: 1));
+    mufta.cables!.add(
+        CableEnd(fibersNumber: 8, direction: 'Федько/Лукачева', sideIndex: 0));
+    mufta.cables!
+        .add(CableEnd(fibersNumber: 16, direction: 'Школа 15', sideIndex: 1));
     //mufta.connections = [];
-    mufta.connections!.add(Connection(cableIndex1: 0, fiberNumber1: 1, cableIndex2: 1, fiberNumber2: 1));
-    mufta.connections!.add(Connection(cableIndex1: 0, fiberNumber1: 2, cableIndex2: 1, fiberNumber2: 2));
-    mufta.connections!.add(Connection(cableIndex1: 0, fiberNumber1: 3, cableIndex2: 1, fiberNumber2: 8));
+    mufta.connections!.add(Connection(
+        cableIndex1: 0, fiberNumber1: 1, cableIndex2: 1, fiberNumber2: 1));
+    mufta.connections!.add(Connection(
+        cableIndex1: 0, fiberNumber1: 2, cableIndex2: 1, fiberNumber2: 2));
+    mufta.connections!.add(Connection(
+        cableIndex1: 0, fiberNumber1: 3, cableIndex2: 1, fiberNumber2: 8));
     super.initState();
   }
 
@@ -61,25 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: isShowMuftu ? MuftaScreen(mufta: mufta) : Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      body: isShowMuftu ? MuftaScreen(mufta: mufta) : Container(),
     );
   }
 }

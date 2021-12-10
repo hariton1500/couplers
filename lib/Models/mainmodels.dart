@@ -2,13 +2,20 @@ class CableEnd {
   final int sideIndex;
   final String direction;
   final int fibersNumber;
-  CableEnd({required this.fibersNumber, required this.direction, required this.sideIndex});
+  CableEnd(
+      {required this.fibersNumber,
+      required this.direction,
+      required this.sideIndex});
 }
 
 class Connection {
-  List<String> connections = [];
-  Connection({required int cableIndex1, required int fiberNumber1, required int cableIndex2, required int fiberNumber2}) {
-    connections.add('$cableIndex1 $fiberNumber1 $cableIndex2 $fiberNumber2');
+  String connection = '';
+  Connection(
+      {required int cableIndex1,
+      required int fiberNumber1,
+      required int cableIndex2,
+      required int fiberNumber2}) {
+    connection = '$cableIndex1 $fiberNumber1 $cableIndex2 $fiberNumber2';
   }
 }
 
