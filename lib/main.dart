@@ -46,10 +46,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     //mufta.cables = [];
-    mufta.cables!.add(CableEnd(fibersNumber: 8, direction: 'Федько/Лукачева'));
-    mufta.cables!.add(CableEnd(fibersNumber: 16, direction: 'Школа 15'));
+    mufta.cables!.add(CableEnd(fibersNumber: 8, direction: 'Федько/Лукачева', sideIndex: 0));
+    mufta.cables!.add(CableEnd(fibersNumber: 16, direction: 'Школа 15', sideIndex: 1));
     //mufta.connections = [];
-    mufta.connections!.add(Connection(cableEndX: mufta.cables![0], fiberNumberX: 1, cableEndY: mufta.cables![1], fiberNumberY: 1));
+    mufta.connections!.add(Connection(cableIndex1: 0, fiberNumber1: 1, cableIndex2: 1, fiberNumber2: 1));
+    mufta.connections!.add(Connection(cableIndex1: 0, fiberNumber1: 2, cableIndex2: 1, fiberNumber2: 2));
+    mufta.connections!.add(Connection(cableIndex1: 0, fiberNumber1: 3, cableIndex2: 1, fiberNumber2: 8));
     super.initState();
   }
 

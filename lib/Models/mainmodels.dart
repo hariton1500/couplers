@@ -1,15 +1,14 @@
 class CableEnd {
+  final int sideIndex;
   final String direction;
   final int fibersNumber;
-  CableEnd({required this.fibersNumber, required this.direction});
+  CableEnd({required this.fibersNumber, required this.direction, required this.sideIndex});
 }
 
 class Connection {
-  Map<CableEnd, int>? elementsMap;
-  final CableEnd cableEndX, cableEndY;
-  final int fiberNumberX, fiberNumberY;
-  Connection({required this.cableEndX, required this.fiberNumberX, required this.cableEndY, required this.fiberNumberY}) {
-    elementsMap![cableEndX] = fiberNumberX;
+  List<String> connections = [];
+  Connection({required int cableIndex1, required int fiberNumber1, required int cableIndex2, required int fiberNumber2}) {
+    connections.add('$cableIndex1 $fiberNumber1 $cableIndex2 $fiberNumber2');
   }
 }
 
