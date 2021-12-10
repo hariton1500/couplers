@@ -15,9 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue, canvasColor: Colors.white),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -33,15 +31,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   bool isShowMuftu = true;
   Mufta mufta = Mufta();
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
 
   @override
   void initState() {
@@ -49,14 +40,16 @@ class _MyHomePageState extends State<MyHomePage> {
     mufta.cables!.add(
         CableEnd(fibersNumber: 8, direction: 'Федько/Лукачева', sideIndex: 0));
     mufta.cables!
-        .add(CableEnd(fibersNumber: 16, direction: 'Школа 15', sideIndex: 1));
+        .add(CableEnd(fibersNumber: 8, direction: 'Школа 15', sideIndex: 1));
+    mufta.cables!.add(
+        CableEnd(fibersNumber: 12, direction: 'Поликлиника', sideIndex: 0));
     //mufta.connections = [];
+    mufta.connections!.add(Connection(
+        cableIndex1: 0, fiberNumber1: 0, cableIndex2: 1, fiberNumber2: 0));
     mufta.connections!.add(Connection(
         cableIndex1: 0, fiberNumber1: 1, cableIndex2: 1, fiberNumber2: 1));
     mufta.connections!.add(Connection(
-        cableIndex1: 0, fiberNumber1: 2, cableIndex2: 1, fiberNumber2: 2));
-    mufta.connections!.add(Connection(
-        cableIndex1: 0, fiberNumber1: 3, cableIndex2: 1, fiberNumber2: 8));
+        cableIndex1: 1, fiberNumber1: 1, cableIndex2: 1, fiberNumber2: 6));
     super.initState();
   }
 

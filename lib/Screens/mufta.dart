@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:couplers/Models/mainmodels.dart';
 import 'package:flutter/material.dart';
 
@@ -35,50 +37,82 @@ class MuftaPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint();
-    paint.color = Colors.black;
+    //paint.color = Colors.black;
     paint.strokeWidth = 2;
     double wd = width - 60;
     double st = 50;
+    const textStyle = TextStyle(color: Colors.black, fontSize: 10);
 
+    double yPos0 = 0, yPos1 = 0;
     for (var cable in mufta.cables!) {
       for (var i = 0; i < cable.fibersNumber; i++) {
-        canvas.drawLine(Offset(cable.sideIndex == 0 ? st : wd, i * 11),
-            Offset(cable.sideIndex == 0 ? st + 10 : wd + 10, i * 11), paint);
+        var tp = TextPainter(
+            text: TextSpan(text: '${i + 1}', style: textStyle),
+            textDirection: TextDirection.ltr);
+        tp.layout();
+        if (cable.sideIndex == 0) {
+          tp.paint(canvas, Offset(st - 10, yPos0 - 5));
+        } else {
+          tp.paint(canvas, Offset(wd + 15, yPos1 - 5));
+        }
+        paint.color = mufta.colors[i];
+        if (cable.sideIndex == 0) {
+          canvas.drawLine(Offset(st, yPos0), Offset(st + 10, yPos0), paint);
+          cable.fiberPosY[i] = yPos0;
+          yPos0 += 11;
+        } else {
+          canvas.drawLine(Offset(wd, yPos1), Offset(wd + 10, yPos1), paint);
+          cable.fiberPosY[i] = yPos1;
+          yPos1 += 11;
+        }
+      }
+      if (cable.sideIndex == 0) {
+        yPos0 += 22;
+      } else {
+        yPos1 += 22;
       }
     }
 
-    for (var i = 0; i < mufta.connections!.length; i++) {
-      List<String> conList = mufta.connections![i].connection.split(' ');
+    paint.strokeWidth = 1;
 
-      int cableIndex1 = int.parse(conList[0]);
-      int cableIndex2 = int.parse(conList[2]);
-      int fiberNumber1 = int.parse(conList[1]);
-      int fiberNumber2 = int.parse(conList[3]);
+    for (var connection in mufta.connections!) {
+      List<int> conList = connection.connectionData;
 
-      int pos0 = 0;
-      for (var c = 0; c < cableIndex1; c++) {
-        if (mufta.cables![c].sideIndex == 0) {
-          pos0 += mufta.cables![c].fibersNumber * 11;
-          pos0 += 20;
-        }
+      int cableIndex1 = conList[0];
+      int cableIndex2 = conList[2];
+      int fiberNumber1 = conList[1];
+      int fiberNumber2 = conList[3];
+
+      CableEnd cable1 = mufta.cables![cableIndex1],
+          cable2 = mufta.cables![cableIndex2];
+      if (cable1.sideIndex != cable2.sideIndex) {
+        canvas.drawLine(
+            Offset(cable1.sideIndex == 0 ? st + 10 : wd,
+                cable1.fiberPosY[fiberNumber1]!),
+            Offset(cable2.sideIndex == 0 ? st + 10 : wd,
+                cable2.fiberPosY[fiberNumber2]!),
+            paint);
+      } else {
+        canvas.drawLine(
+            Offset(cable1.sideIndex == 0 ? st + 10 : wd,
+                cable1.fiberPosY[fiberNumber1]!),
+            Offset(
+                (wd - st + 10) / 2,
+                (cable2.fiberPosY[fiberNumber2]! -
+                        cable1.fiberPosY[fiberNumber1]!) /
+                    2),
+            paint);
+        canvas.drawLine(
+            Offset(
+                (wd - st + 10) / 2,
+                (cable2.fiberPosY[fiberNumber2]! -
+                        cable1.fiberPosY[fiberNumber1]!) /
+                    2),
+            Offset(cable2.sideIndex == 0 ? st + 10 : wd,
+                cable2.fiberPosY[fiberNumber2]!),
+            paint);
+        paint.style = PaintingStyle.stroke;
       }
-      pos0 += fiberNumber1 * 11;
-
-      int pos1 = 0;
-      for (var c = 0; c < cableIndex2; c++) {
-        if (mufta.cables![c].sideIndex == 1) {
-          pos1 += mufta.cables![c].fibersNumber * 11;
-          pos1 += 20;
-        }
-      }
-      pos1 += fiberNumber2 * 11;
-
-      canvas.drawLine(
-          Offset(mufta.cables![cableIndex1].sideIndex == 0 ? st + 10 : wd,
-              pos0.toDouble()),
-          Offset(mufta.cables![cableIndex2].sideIndex == 0 ? st + 10 : wd,
-              pos1.toDouble()),
-          paint);
     }
   }
 
