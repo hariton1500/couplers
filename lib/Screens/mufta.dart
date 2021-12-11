@@ -1,5 +1,3 @@
-// ignore_for_file: unused_local_variable
-
 import 'package:couplers/Models/mainmodels.dart';
 import 'package:flutter/material.dart';
 
@@ -12,18 +10,88 @@ class MuftaScreen extends StatefulWidget {
 }
 
 class _MuftaScreenState extends State<MuftaScreen> {
+  int? isCableSelected;
+
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(
-          height: 50,
+          height: 30,
         ),
-        CustomPaint(
-          //size: 500,
-          painter:
-              MuftaPainter(widget.mufta, MediaQuery.of(context).size.width),
-        )
+        GestureDetector(
+          onTapDown: (details) {
+            //print(details.localPosition);
+            //print(widget.mufta.cables!.length);
+            int index = widget.mufta.cables!.indexWhere((cable) {
+              double x = cable.sideIndex == 0
+                  ? 50
+                  : MediaQuery.of(context).size.width - 60;
+              if (details.localPosition.dx >= x - 20 &&
+                  details.localPosition.dx <= x + 20 &&
+                  details.localPosition.dy >= cable.fiberPosY.values.first &&
+                  details.localPosition.dy <= cable.fiberPosY.values.last) {
+                return true;
+              } else {
+                return false;
+              }
+            });
+            //print('taped on cable index = $index');
+            setState(() {
+              isCableSelected = index;
+            });
+          },
+          child: CustomPaint(
+            //size: 500,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.width - 100,
+            ),
+            painter: MuftaPainter(widget.mufta,
+                MediaQuery.of(context).size.width, isCableSelected ?? -1),
+          ),
+        ),
+        widget.mufta.connections!.isNotEmpty
+            ? TextButton.icon(
+                icon: const Icon(Icons.delete_forever_outlined),
+                onPressed: () {
+                  setState(() {
+                    widget.mufta.connections!.clear();
+                  });
+                },
+                label: const Text('Delete all connections'),
+              )
+            : Container(),
+        isCableSelected != null && isCableSelected! >= 0
+            ? TextButton.icon(
+                onPressed: () {
+                  setState(() {
+                    widget.mufta.connections!.removeWhere((connection) {
+                      return (connection.connectionData[0] == isCableSelected ||
+                          connection.connectionData[2] == isCableSelected);
+                    });
+                    widget.mufta.cables!.removeAt(isCableSelected!);
+                    isCableSelected = -1;
+                  });
+                },
+                icon: const Icon(Icons.remove_outlined),
+                label: const Text('Delete cable'))
+            : Container(),
+        isCableSelected != null && isCableSelected! >= 0
+            ? TextButton.icon(
+                onPressed: () {
+                  setState(() {
+                    if (widget.mufta.cables![isCableSelected!].sideIndex == 0) {
+                      widget.mufta.cables![isCableSelected!].sideIndex = 1;
+                    } else {
+                      widget.mufta.cables![isCableSelected!].sideIndex = 0;
+                    }
+                  });
+                },
+                icon: const Icon(Icons.change_circle_outlined),
+                label: const Text('Change side'))
+            : Container(),
       ],
     );
   }
@@ -32,22 +100,44 @@ class _MuftaScreenState extends State<MuftaScreen> {
 class MuftaPainter extends CustomPainter {
   final Mufta mufta;
   final double width;
-  MuftaPainter(this.mufta, this.width);
+  final int selectedCableIndex;
+  MuftaPainter(this.mufta, this.width, this.selectedCableIndex);
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint();
+    //print(selectedCableIndex);
     //paint.color = Colors.black;
     paint.strokeWidth = 2;
     double wd = width - 60;
     double st = 50;
-    const textStyle = TextStyle(color: Colors.black, fontSize: 10);
 
-    double yPos0 = 0, yPos1 = 0;
+    double yPos0 = 20, yPos1 = 20;
     for (var cable in mufta.cables!) {
+      var tpDirection = TextPainter(
+          text: TextSpan(
+              text: cable.direction, style: const TextStyle(fontSize: 10)),
+          textDirection: TextDirection.ltr);
+      //print(cable.direction);
+      //canvas.rotate(pi);
+      tpDirection.layout();
+      if (cable.sideIndex == 0) {
+        tpDirection.paint(canvas, Offset(st - 30, yPos0 - 15));
+      } else {
+        tpDirection.paint(canvas, Offset(wd - 25, yPos1 - 15));
+      }
+      //canvas.rotate(-pi);
       for (var i = 0; i < cable.fibersNumber; i++) {
+        TextStyle ts = const TextStyle(fontSize: 10);
+        if (mufta.cables!.indexOf(cable) == selectedCableIndex) {
+          ts = ts.copyWith(color: Colors.red);
+          ts = ts.copyWith(fontWeight: FontWeight.bold);
+          //print('printing bold');
+        } else {
+          ts = ts.copyWith(color: Colors.black);
+        }
         var tp = TextPainter(
-            text: TextSpan(text: '${i + 1}', style: textStyle),
+            text: TextSpan(text: '${i + 1}', style: ts),
             textDirection: TextDirection.ltr);
         tp.layout();
         if (cable.sideIndex == 0) {
@@ -97,17 +187,19 @@ class MuftaPainter extends CustomPainter {
             Offset(cable1.sideIndex == 0 ? st + 10 : wd,
                 cable1.fiberPosY[fiberNumber1]!),
             Offset(
-                (wd - st + 10) / 2,
+                width / 2,
                 (cable2.fiberPosY[fiberNumber2]! -
-                        cable1.fiberPosY[fiberNumber1]!) /
-                    2),
+                            cable1.fiberPosY[fiberNumber1]!) /
+                        2 +
+                    20),
             paint);
         canvas.drawLine(
             Offset(
-                (wd - st + 10) / 2,
+                width / 2,
                 (cable2.fiberPosY[fiberNumber2]! -
-                        cable1.fiberPosY[fiberNumber1]!) /
-                    2),
+                            cable1.fiberPosY[fiberNumber1]!) /
+                        2 +
+                    20),
             Offset(cable2.sideIndex == 0 ? st + 10 : wd,
                 cable2.fiberPosY[fiberNumber2]!),
             paint);

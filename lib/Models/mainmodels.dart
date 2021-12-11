@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CableEnd {
-  final int sideIndex;
+  int sideIndex;
   final String direction;
   final int fibersNumber;
   Map<int, double> fiberPosY = {};
