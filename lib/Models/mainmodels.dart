@@ -39,7 +39,15 @@ class Mufta {
     Colors.blue,
     Colors.orange,
     Colors.green,
-    Colors.brown
+    Colors.brown,
+    Colors.grey,
+    Colors.white,
+    Colors.red,
+    Colors.black,
+    Colors.yellow,
+    Colors.purple,
+    Colors.pink,
+    Colors.indigo
   ];
   String? name;
   List<CableEnd>? cables;
@@ -47,11 +55,5 @@ class Mufta {
   Mufta() {
     cables = [];
     connections = [];
-  }
-
-  @override
-  String toString() {
-    // TODO: implement toString
-    return super.toString();
   }
 }
