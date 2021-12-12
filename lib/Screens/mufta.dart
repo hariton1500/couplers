@@ -54,39 +54,43 @@ class _MuftaScreenState extends State<MuftaScreen> {
           ),
         ),
         TextButton.icon(onPressed: () {
-          showDialog<CableEnd>(context: context, builder: (builContext) {
-            String? cableName;
+          showDialog<CableEnd>(context: context, builder: (BuildContext context) {
+            String cableName = '';
             int fibersNumber = 1;
             List<DropdownMenuItem<int>> fibersList = List.generate(24, (i) => DropdownMenuItem<int>(value: i + 1, child: Text((i + 1).toString()),));
-            return AlertDialog(
-              title: const Text('Adding of cable'),
-              content: Column(
-                children: [
-                  const Text('Direction:'),
-                  TextField(
-                    keyboardType: TextInputType.text,
-                    onChanged: (text) {cableName = text;},
+            return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return AlertDialog(
+                  title: const Text('Adding of cable'),
+                  content: Column(
+                    children: [
+                      const Text('Direction:'),
+                      TextField(
+                        keyboardType: TextInputType.text,
+                        onChanged: (text) {cableName = text;},
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text('Number of Fibers:'),
+                      ),
+                      DropdownButton<int>(
+                        value: fibersNumber,
+                        onChanged: (i) {
+                          //print(i);
+                          setState(() {fibersNumber = i!;});},
+                        items: fibersList
+                      )
+                      //TextField(keyboardType: TextInputType.number, onChanged: (text) {fibersNumber = int.parse(text);}),
+                    ],
                   ),
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text('Number of Fibers:'),
-                  ),
-                  DropdownButton<int>(
-                    value: fibersNumber,
-                    onChanged: (i) {
-                      print(i);
-                      setState(() {fibersNumber = i!;print(fibersNumber);});},
-                    items: fibersList
-                  )
-                  //TextField(keyboardType: TextInputType.number, onChanged: (text) {fibersNumber = int.parse(text);}),
-                ],
-              ),
-              actions: [
-                OutlinedButton(onPressed: () {
-                  Navigator.of(context).pop();
-                }, child: const Text('Cancel')),
-                OutlinedButton(onPressed: () {Navigator.of(context).pop(CableEnd(direction: cableName!, fibersNumber: fibersNumber, sideIndex: 0));}, child: const Text('Add'))
-              ],
+                  actions: [
+                    OutlinedButton(onPressed: () {
+                      Navigator.of(context).pop();
+                    }, child: const Text('Cancel')),
+                    OutlinedButton(onPressed: () {Navigator.of(context).pop(CableEnd(direction: cableName!, fibersNumber: fibersNumber, sideIndex: 0));}, child: const Text('Add'))
+                  ],
+                );
+              }
             );
           }).then((value) => setState((){
             if (value != null) widget.mufta.cables!.add(value);
