@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:couplers/Models/mainmodels.dart';
 import 'package:flutter/material.dart';
 
@@ -22,10 +24,8 @@ class _MuftaScreenState extends State<MuftaScreen> {
           : tmp1 += cable.fibersNumber;
     }
     tmp0 >= tmp1 ? longestSideHeight = tmp0 : longestSideHeight = tmp1;
-    print('List of connections:');
-    for (var connection in widget.mufta.connections!) {
-      print(connection.connectionData);
-    }
+    //print('List of connections:');
+    //for (var connection in widget.mufta.connections!) {print(connection.connectionData);}
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,6 +148,8 @@ class _MuftaScreenState extends State<MuftaScreen> {
                                 0;
                           }
                         });
+                        print(widget.mufta.toJson());
+                        print(jsonEncode(widget.mufta));
                       },
                       icon: const Icon(Icons.change_circle_outlined),
                       label: const Text('Change side'))
@@ -157,9 +159,9 @@ class _MuftaScreenState extends State<MuftaScreen> {
                       onPressed: () {
                         setState(() {
                           widget.mufta.connections!.removeWhere((connection) {
-                            return (connection.connectionData[0] ==
+                            return (connection.cableIndex1 ==
                                     isCableSelected ||
-                                connection.connectionData[2] ==
+                                connection.cableIndex2 ==
                                     isCableSelected);
                           });
                           widget.mufta.cables!.removeAt(isCableSelected!);
@@ -308,8 +310,8 @@ class _MuftaScreenState extends State<MuftaScreen> {
               ? Column(
                   children: widget.mufta.connections!
                       .where((element) =>
-                          element.connectionData[0] == isCableSelected ||
-                          element.connectionData[2] == isCableSelected)
+                          element.cableIndex1 == isCableSelected ||
+                          element.cableIndex2 == isCableSelected)
                       .map((c) => Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -317,7 +319,7 @@ class _MuftaScreenState extends State<MuftaScreen> {
                                 width: 40,
                               ),
                               Text(
-                                  '${widget.mufta.cables![c.connectionData[0]].direction}[${c.connectionData[1] + 1}] <---> ${widget.mufta.cables![c.connectionData[2]].direction}[${c.connectionData[3] + 1}]'),
+                                  '${widget.mufta.cables![c.cableIndex1].direction}[${c.fiberNumber1 + 1}] <---> ${widget.mufta.cables![c.cableIndex2].direction}[${c.fiberNumber2 + 1}]'),
                               TextButton.icon(
                                   onPressed: () {
                                     setState(() {
@@ -425,12 +427,12 @@ class MuftaPainter extends CustomPainter {
     paint.style = PaintingStyle.stroke;
 
     for (var connection in mufta.connections!) {
-      List<int> conList = connection.connectionData;
+      //List<int> conList = connection.connectionData;
 
-      int cableIndex1 = conList[0];
-      int cableIndex2 = conList[2];
-      int fiberNumber1 = conList[1];
-      int fiberNumber2 = conList[3];
+      int cableIndex1 = connection.cableIndex1;
+      int cableIndex2 = connection.cableIndex2;
+      int fiberNumber1 = connection.fiberNumber1;
+      int fiberNumber2 = connection.fiberNumber2;
 
       CableEnd cable1 = mufta.cables![cableIndex1],
           cable2 = mufta.cables![cableIndex2];
@@ -442,26 +444,6 @@ class MuftaPainter extends CustomPainter {
                 cable2.fiberPosY[fiberNumber2]!),
             paint);
       } else {
-        /*canvas.drawLine(
-            Offset(cable1.sideIndex == 0 ? st + 10 : wd,
-                cable1.fiberPosY[fiberNumber1]!),
-            Offset(
-                width / 2,
-                (cable2.fiberPosY[fiberNumber2]! -
-                            cable1.fiberPosY[fiberNumber1]!) /
-                        2 +
-                    20),
-            paint);
-        canvas.drawLine(
-            Offset(
-                width / 2,
-                (cable2.fiberPosY[fiberNumber2]! -
-                            cable1.fiberPosY[fiberNumber1]!) /
-                        2 +
-                    20),
-            Offset(cable2.sideIndex == 0 ? st + 10 : wd,
-                cable2.fiberPosY[fiberNumber2]!),
-            paint);*/
         Path path = Path();
         path.moveTo(cable1.sideIndex == 0 ? st + 10 : wd,
             cable1.fiberPosY[fiberNumber1]!);
