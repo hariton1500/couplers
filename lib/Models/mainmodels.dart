@@ -1,4 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+
+Mufta muftaFromJson(String str) => Mufta.fromJson(json.decode(str));
+String muftaToJson(Mufta data) => json.encode(data.toJson());
 
 class CableEnd {
   int sideIndex;
@@ -10,11 +14,16 @@ class CableEnd {
       required this.direction,
       required this.sideIndex});
   Map<String, dynamic> toJson() => {
-    'direction' : direction,
-    'sideIndex' : sideIndex,
-    'fibersNumber' : fibersNumber,
-    'fiberPosY' : fiberPosY
-  };
+        'direction': direction,
+        'sideIndex': sideIndex,
+        'fibersNumber': fibersNumber,
+        //'fiberPosY': fiberPosY
+      };
+  factory CableEnd.fromJson(Map<String, dynamic> json) => CableEnd(
+        direction: json["direction"],
+        sideIndex: json["sideIndex"],
+        fibersNumber: json["fibersNumber"],
+      );
 }
 
 class Connection {
@@ -28,12 +37,18 @@ class Connection {
     //connectionData = [cableIndex1, fiberNumber1, cableIndex2, fiberNumber2];
   }
   Map<String, dynamic> toJson() => {
-    //'connectionData' : connectionData,
-    'cableIndex1' : cableIndex1,
-    'cableIndex2' : cableIndex2,
-    'fiberNumber1' : fiberNumber1,
-    'fiberNumber2' : fiberNumber2
-  };
+        //'connectionData' : connectionData,
+        'cableIndex1': cableIndex1,
+        'cableIndex2': cableIndex2,
+        'fiberNumber1': fiberNumber1,
+        'fiberNumber2': fiberNumber2
+      };
+  factory Connection.fromJson(Map<String, dynamic> json) => Connection(
+        cableIndex1: json["cableIndex1"],
+        cableIndex2: json["cableIndex2"],
+        fiberNumber1: json["fiberNumber1"],
+        fiberNumber2: json["fiberNumber2"],
+      );
 }
 
 class Mufta {
@@ -63,17 +78,26 @@ class Mufta {
     Colors.pink,
     Colors.indigo
   ];
+  Mufta({
+    required this.name,
+    required this.cables,
+    required this.connections,
+  });
+
   String name = '';
-  List<CableEnd>? cables;
-  List<Connection>? connections;
-  Mufta() {
-    cables = [];
-    connections = [];
-  }
+  List<CableEnd> cables = [];
+  List<Connection> connections = [];
   Map<String, dynamic> toJson() => {
-    //'colors' : colors,
-    'name' : name,
-    'cables' : cables,
-    'connections' : connections
-  };
+        //'colors' : colors,
+        'name': name,
+        'cables': cables, //?.map((e) => e.toJson()).toList(),
+        'connections': connections //?.map((e) => e.toJson()).toList()
+      };
+  factory Mufta.fromJson(Map<String, dynamic> json) => Mufta(
+        name: json["name"],
+        cables: List<CableEnd>.from(
+            json["cables"].map((x) => CableEnd.fromJson(x))),
+        connections: List<Connection>.from(
+            json["connections"].map((x) => Connection.fromJson(x))),
+      );
 }

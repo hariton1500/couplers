@@ -32,23 +32,23 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool isShowMuftu = true;
-  Mufta mufta = Mufta();
+  Mufta mufta = Mufta(cables: [], connections: [], name: '');
 
   @override
   void initState() {
     //mufta.cables = [];
-    mufta.cables!.add(
+    mufta.cables.add(
         CableEnd(fibersNumber: 8, direction: 'Федько/Лукачева', sideIndex: 0));
-    mufta.cables!
+    mufta.cables
         .add(CableEnd(fibersNumber: 8, direction: 'Школа 15', sideIndex: 1));
-    mufta.cables!.add(
+    mufta.cables.add(
         CableEnd(fibersNumber: 12, direction: 'Поликлиника', sideIndex: 0));
     //mufta.connections = [];
-    mufta.connections!.add(Connection(
+    mufta.connections.add(Connection(
         cableIndex1: 0, fiberNumber1: 0, cableIndex2: 1, fiberNumber2: 0));
-    mufta.connections!.add(Connection(
+    mufta.connections.add(Connection(
         cableIndex1: 0, fiberNumber1: 1, cableIndex2: 1, fiberNumber2: 1));
-    mufta.connections!.add(Connection(
+    mufta.connections.add(Connection(
         cableIndex1: 1, fiberNumber1: 1, cableIndex2: 1, fiberNumber2: 6));
     super.initState();
   }

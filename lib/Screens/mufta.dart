@@ -1,7 +1,6 @@
-import 'dart:convert';
-
 import 'package:couplers/Models/mainmodels.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MuftaScreen extends StatefulWidget {
   const MuftaScreen({Key? key, required this.mufta}) : super(key: key);
@@ -18,7 +17,7 @@ class _MuftaScreenState extends State<MuftaScreen> {
   @override
   Widget build(BuildContext context) {
     int tmp0 = 0, tmp1 = 0;
-    for (var cable in widget.mufta.cables!) {
+    for (var cable in widget.mufta.cables) {
       cable.sideIndex == 0
           ? tmp0 += cable.fibersNumber
           : tmp1 += cable.fibersNumber;
@@ -30,14 +29,13 @@ class _MuftaScreenState extends State<MuftaScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(
-            height: 30,
-          ),
+          Text(widget.mufta.name),
+          //const SizedBox(height: 30,),
           GestureDetector(
             onTapDown: (details) {
               //print(details.localPosition);
               //print(widget.mufta.cables!.length);
-              int index = widget.mufta.cables!.indexWhere((cable) {
+              int index = widget.mufta.cables.indexWhere((cable) {
                 double x = cable.sideIndex == 0
                     ? 50
                     : MediaQuery.of(context).size.width - 60;
@@ -65,6 +63,34 @@ class _MuftaScreenState extends State<MuftaScreen> {
                   MediaQuery.of(context).size.width, isCableSelected ?? -1),
             ),
           ),
+          TextButton.icon(
+              onPressed: () {
+                showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      String name = '';
+                      return AlertDialog(
+                        title: const Text('Name editing'),
+                        content: TextField(
+                          onChanged: (text) => name = text,
+                        ),
+                        actions: [
+                          OutlinedButton(
+                              onPressed: () {
+                                Navigator.pop(context, name);
+                              },
+                              child: const Text('Ok'))
+                        ],
+                      );
+                    }).then((value) {
+                  print(value);
+                  setState(() {
+                    widget.mufta.name = value ?? '';
+                  });
+                });
+              },
+              icon: const Icon(Icons.change_circle_outlined),
+              label: const Text('Change name')),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -129,7 +155,7 @@ class _MuftaScreenState extends State<MuftaScreen> {
                             );
                           });
                         }).then((value) => setState(() {
-                          if (value != null) widget.mufta.cables!.add(value);
+                          if (value != null) widget.mufta.cables.add(value);
                         }));
                   },
                   icon: const Icon(Icons.add_outlined),
@@ -138,18 +164,15 @@ class _MuftaScreenState extends State<MuftaScreen> {
                   ? TextButton.icon(
                       onPressed: () {
                         setState(() {
-                          if (widget
-                                  .mufta.cables![isCableSelected!].sideIndex ==
+                          if (widget.mufta.cables[isCableSelected!].sideIndex ==
                               0) {
-                            widget.mufta.cables![isCableSelected!].sideIndex =
-                                1;
+                            widget.mufta.cables[isCableSelected!].sideIndex = 1;
                           } else {
-                            widget.mufta.cables![isCableSelected!].sideIndex =
-                                0;
+                            widget.mufta.cables[isCableSelected!].sideIndex = 0;
                           }
                         });
-                        print(widget.mufta.toJson());
-                        print(jsonEncode(widget.mufta));
+                        //print(widget.mufta.toJson());
+                        //print(jsonEncode(widget.mufta));
                       },
                       icon: const Icon(Icons.change_circle_outlined),
                       label: const Text('Change side'))
@@ -158,13 +181,11 @@ class _MuftaScreenState extends State<MuftaScreen> {
                   ? TextButton.icon(
                       onPressed: () {
                         setState(() {
-                          widget.mufta.connections!.removeWhere((connection) {
-                            return (connection.cableIndex1 ==
-                                    isCableSelected ||
-                                connection.cableIndex2 ==
-                                    isCableSelected);
+                          widget.mufta.connections.removeWhere((connection) {
+                            return (connection.cableIndex1 == isCableSelected ||
+                                connection.cableIndex2 == isCableSelected);
                           });
-                          widget.mufta.cables!.removeAt(isCableSelected!);
+                          widget.mufta.cables.removeAt(isCableSelected!);
                           isCableSelected = -1;
                         });
                       },
@@ -188,14 +209,14 @@ class _MuftaScreenState extends State<MuftaScreen> {
                                   fiberNumber2 = 1;
                               List<DropdownMenuItem<int>> fibers1 =
                                   List.generate(
-                                      widget.mufta.cables![cableIndex1]
+                                      widget.mufta.cables[cableIndex1]
                                           .fibersNumber,
                                       (index) => DropdownMenuItem(
                                           value: index + 1,
                                           child: Text((index + 1).toString())));
                               List<DropdownMenuItem<int>> fibers2 =
                                   List.generate(
-                                      widget.mufta.cables![cableIndex2]
+                                      widget.mufta.cables[cableIndex2]
                                           .fibersNumber,
                                       (index) => DropdownMenuItem(
                                           value: index + 1,
@@ -203,17 +224,17 @@ class _MuftaScreenState extends State<MuftaScreen> {
                               //print(fibers2.length);
                               List<DropdownMenuItem<int>> cables =
                                   List.generate(
-                                      widget.mufta.cables!.length,
+                                      widget.mufta.cables.length,
                                       (index) => DropdownMenuItem(
                                           value: index,
-                                          child: Text(widget.mufta
-                                              .cables![index].direction)));
+                                          child: Text(widget
+                                              .mufta.cables[index].direction)));
                               return StatefulBuilder(builder:
                                   (BuildContext context, StateSetter setState) {
                                 //print(cableIndex2);
                                 fibers2 = List.generate(
-                                    widget.mufta.cables![cableIndex2]
-                                        .fibersNumber,
+                                    widget
+                                        .mufta.cables[cableIndex2].fibersNumber,
                                     (index) => DropdownMenuItem(
                                         value: index + 1,
                                         child: Text((index + 1).toString())));
@@ -226,7 +247,7 @@ class _MuftaScreenState extends State<MuftaScreen> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
                                         children: [
-                                          Text(widget.mufta.cables![cableIndex1]
+                                          Text(widget.mufta.cables[cableIndex1]
                                               .direction),
                                           DropdownButton<int>(
                                             value: fiberNumber1,
@@ -286,19 +307,19 @@ class _MuftaScreenState extends State<MuftaScreen> {
                               });
                             }).then((value) => setState(() {
                               if (value != null) {
-                                widget.mufta.connections!.add(value);
+                                widget.mufta.connections.add(value);
                               }
                             }));
                       },
                       icon: const Icon(Icons.add_outlined),
                       label: const Text('Add connection'))
                   : Container(),
-              widget.mufta.connections!.isNotEmpty
+              widget.mufta.connections.isNotEmpty
                   ? TextButton.icon(
                       icon: const Icon(Icons.delete_forever_outlined),
                       onPressed: () {
                         setState(() {
-                          widget.mufta.connections!.clear();
+                          widget.mufta.connections.clear();
                         });
                       },
                       label: const Text('Delete all connections'),
@@ -306,9 +327,103 @@ class _MuftaScreenState extends State<MuftaScreen> {
                   : Container(),
             ],
           ),
+          Row(
+            children: [
+              widget.mufta.cables.isNotEmpty
+                  ? TextButton.icon(
+                      onPressed: () {
+                        var variants = const [
+                          'to Local Device',
+                          'to REST of billing software'
+                        ]
+                            .map((e) => DropdownMenuItem<String>(
+                                value: e, child: Text(e)))
+                            .toList();
+                        String exportVariant = variants.first.value!;
+                        showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return StatefulBuilder(builder:
+                                  (BuildContext context, StateSetter setState) {
+                                return AlertDialog(
+                                  title: const Text('Export'),
+                                  content: Column(
+                                    children: [
+                                      DropdownButton<String>(
+                                          value: exportVariant,
+                                          items: variants,
+                                          onChanged: (variant) {
+                                            setState(() {
+                                              exportVariant = variant!;
+                                            });
+                                          }),
+                                      exportVariant == variants[0].value
+                                          ? Text(
+                                              'exporting to local device coupler ${widget.mufta.name}')
+                                          : Container(),
+                                      exportVariant == variants[1].value
+                                          ? const Text(
+                                              'exporting to REST URL: ')
+                                          : Container()
+                                    ],
+                                  ),
+                                  actions: [
+                                    OutlinedButton(
+                                        onPressed: () {
+                                          if (exportVariant ==
+                                              variants[0].value) {
+                                            saveToLocal(widget.mufta);
+                                          }
+                                          Navigator.of(context)
+                                              .pop(exportVariant);
+                                        },
+                                        child: const Text('Export'))
+                                  ],
+                                );
+                              });
+                            }).then((value) => print(value));
+                      },
+                      icon: const Icon(Icons.save_outlined),
+                      label: const Text('Export'))
+                  : Container(),
+              TextButton.icon(
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return StatefulBuilder(builder:
+                              (BuildContext context, StateSetter setState) {
+                            //var names = loadNames()
+                            return AlertDialog(
+                              title: Text('Importing'),
+                              content: DropdownButtonHideUnderline(
+                                  child: FutureBuilder<List<String>>(
+                                      future: loadNames(),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<List<String>>
+                                              snapshot) {
+                                        if (snapshot.hasError) {
+                                          return Container();
+                                        } else {
+                                          if (snapshot.hasData) {
+                                            return DropdownButton<String>(
+                                                items: items,
+                                                onChanged: (name) {});
+                                          }
+                                        }
+                                      })),
+                              actions: [],
+                            );
+                          });
+                        });
+                  },
+                  icon: const Icon(Icons.import_export_outlined),
+                  label: const Text('Import'))
+            ],
+          ),
           isCableSelected != null && isCableSelected! >= 0
               ? Column(
-                  children: widget.mufta.connections!
+                  children: widget.mufta.connections
                       .where((element) =>
                           element.cableIndex1 == isCableSelected ||
                           element.cableIndex2 == isCableSelected)
@@ -319,11 +434,11 @@ class _MuftaScreenState extends State<MuftaScreen> {
                                 width: 40,
                               ),
                               Text(
-                                  '${widget.mufta.cables![c.cableIndex1].direction}[${c.fiberNumber1 + 1}] <---> ${widget.mufta.cables![c.cableIndex2].direction}[${c.fiberNumber2 + 1}]'),
+                                  '${widget.mufta.cables[c.cableIndex1].direction}[${c.fiberNumber1 + 1}] <---> ${widget.mufta.cables[c.cableIndex2].direction}[${c.fiberNumber2 + 1}]'),
                               TextButton.icon(
                                   onPressed: () {
                                     setState(() {
-                                      widget.mufta.connections!.remove(c);
+                                      widget.mufta.connections.remove(c);
                                     });
                                   },
                                   icon: const Icon(Icons.delete_outline),
@@ -338,24 +453,6 @@ class _MuftaScreenState extends State<MuftaScreen> {
     );
   }
 }
-/*
-Widget createConnection(Mufta _mufta) {
-  return Column(children: [
-    Row(
-      children: List.generate(_mufta.cables!.length,
-          (index) => Text(_mufta.cables![index].direction)),
-    ),
-    Row(
-      children: List.generate(
-          _mufta.cables!.length,
-          (index) => DropdownButton<String>(
-                  items: List.generate(_mufta.cables![index].fibersNumber,
-                      (index) {
-                return DropdownMenuItem<String>(child: Text(index.toString()));
-              }))),
-    )
-  ]);
-}*/
 
 class MuftaPainter extends CustomPainter {
   final Mufta mufta;
@@ -366,30 +463,25 @@ class MuftaPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint();
-    //print(selectedCableIndex);
-    //paint.color = Colors.black;
     paint.strokeWidth = 2;
     double wd = width - 60;
     double st = 50;
 
     double yPos0 = 20, yPos1 = 20;
-    for (var cable in mufta.cables!) {
+    for (var cable in mufta.cables) {
       var tpDirection = TextPainter(
           text: TextSpan(
               text: cable.direction, style: const TextStyle(fontSize: 10)),
           textDirection: TextDirection.ltr);
-      //print(cable.direction);
-      //canvas.rotate(pi);
       tpDirection.layout();
       if (cable.sideIndex == 0) {
         tpDirection.paint(canvas, Offset(st - 30, yPos0 - 15));
       } else {
         tpDirection.paint(canvas, Offset(wd - 25, yPos1 - 15));
       }
-      //canvas.rotate(-pi);
       for (var i = 0; i < cable.fibersNumber; i++) {
         TextStyle ts = const TextStyle(fontSize: 10);
-        if (mufta.cables!.indexOf(cable) == selectedCableIndex) {
+        if (mufta.cables.indexOf(cable) == selectedCableIndex) {
           ts = ts.copyWith(color: Colors.red);
           ts = ts.copyWith(fontWeight: FontWeight.bold);
           //print('printing bold');
@@ -426,7 +518,7 @@ class MuftaPainter extends CustomPainter {
     paint.strokeWidth = 1;
     paint.style = PaintingStyle.stroke;
 
-    for (var connection in mufta.connections!) {
+    for (var connection in mufta.connections) {
       //List<int> conList = connection.connectionData;
 
       int cableIndex1 = connection.cableIndex1;
@@ -434,8 +526,8 @@ class MuftaPainter extends CustomPainter {
       int fiberNumber1 = connection.fiberNumber1;
       int fiberNumber2 = connection.fiberNumber2;
 
-      CableEnd cable1 = mufta.cables![cableIndex1],
-          cable2 = mufta.cables![cableIndex2];
+      CableEnd cable1 = mufta.cables[cableIndex1],
+          cable2 = mufta.cables[cableIndex2];
       if (cable1.sideIndex != cable2.sideIndex) {
         canvas.drawLine(
             Offset(cable1.sideIndex == 0 ? st + 10 : wd,
@@ -461,4 +553,14 @@ class MuftaPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+}
+
+void saveToLocal(Mufta mufta) async {
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  sharedPreferences.setString(mufta.name, muftaToJson(mufta));
+}
+
+Future<List<String>> loadNames() async {
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  return sharedPreferences.getKeys().toList();
 }
