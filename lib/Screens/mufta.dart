@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MuftaScreen extends StatefulWidget {
-  MuftaScreen({Key? key, required this.mufta}) : super(key: key);
-  Mufta mufta;
+  const MuftaScreen({Key? key, required this.mufta, required this.callback})
+      : super(key: key);
+  final Mufta mufta;
+  final Function callback;
 
   @override
   _MuftaScreenState createState() => _MuftaScreenState();
@@ -388,41 +390,12 @@ class _MuftaScreenState extends State<MuftaScreen> {
                   : Container(),
               TextButton.icon(
                   onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return StatefulBuilder(builder:
-                              (BuildContext context, StateSetter setState) {
-                            //var names = loadNames()
-                            String muftaName = '';
-                            return AlertDialog(
-                              title: const Text('Importing'),
-                              content: DropdownButtonHideUnderline(
-                                  child: FutureBuilder<List<String>>(
-                                      future: loadNames(),
-                                      builder: (BuildContext context,
-                                          AsyncSnapshot<List<String>>
-                                              snapshot) {
-                                        if (snapshot.hasError) {
-                                          return Container();
-                                        } else {
-                                          //String text = snapshot.data!.first;
-                                          return DropdownButton<String>(
-                                                value: text,
-                                                items: snapshot.data!.map((e) => DropdownMenuItem<String>(child: Text(e))).toList(),
-                                                onChanged: (name) {setState((){muftaName = name;});});
-                                          }
-                                        }
-                                      )),
-                              actions: [
-                                OutlinedButton(onPressed: () async {widget.mufta = muftaFromJson(await loadMuftaJson(muftaName));}, child: const Text('Ok'))
-                              ],
-                            );
-                          });
-                        });
+                    //super.widget.callback;
+                    print('call back');
+                    widget.callback();
                   },
-                  icon: const Icon(Icons.import_export_outlined),
-                  label: const Text('Import'))
+                  icon: const Icon(Icons.arrow_back_outlined),
+                  label: const Text('Back'))
             ],
           ),
           isCableSelected != null && isCableSelected! >= 0
