@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MuftaScreen extends StatefulWidget {
-  const MuftaScreen({Key? key, required this.mufta}) : super(key: key);
-  final Mufta mufta;
+  MuftaScreen({Key? key, required this.mufta}) : super(key: key);
+  Mufta mufta;
 
   @override
   _MuftaScreenState createState() => _MuftaScreenState();
@@ -394,8 +394,9 @@ class _MuftaScreenState extends State<MuftaScreen> {
                           return StatefulBuilder(builder:
                               (BuildContext context, StateSetter setState) {
                             //var names = loadNames()
+                            String muftaName = '';
                             return AlertDialog(
-                              title: Text('Importing'),
+                              title: const Text('Importing'),
                               content: DropdownButtonHideUnderline(
                                   child: FutureBuilder<List<String>>(
                                       future: loadNames(),
@@ -405,14 +406,17 @@ class _MuftaScreenState extends State<MuftaScreen> {
                                         if (snapshot.hasError) {
                                           return Container();
                                         } else {
-                                          if (snapshot.hasData) {
-                                            return DropdownButton<String>(
-                                                items: items,
-                                                onChanged: (name) {});
+                                          //String text = snapshot.data!.first;
+                                          return DropdownButton<String>(
+                                                value: text,
+                                                items: snapshot.data!.map((e) => DropdownMenuItem<String>(child: Text(e))).toList(),
+                                                onChanged: (name) {setState((){muftaName = name;});});
                                           }
                                         }
-                                      })),
-                              actions: [],
+                                      )),
+                              actions: [
+                                OutlinedButton(onPressed: () async {widget.mufta = muftaFromJson(await loadMuftaJson(muftaName));}, child: const Text('Ok'))
+                              ],
                             );
                           });
                         });
@@ -563,4 +567,9 @@ void saveToLocal(Mufta mufta) async {
 Future<List<String>> loadNames() async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   return sharedPreferences.getKeys().toList();
+}
+
+Future<String> loadMuftaJson(String json) async {
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  return sharedPreferences.getString(json) ?? '';
 }
