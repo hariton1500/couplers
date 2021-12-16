@@ -101,3 +101,7 @@ class Mufta {
             json["connections"].map((x) => Connection.fromJson(x))),
       );
 }
+
+class Settings {
+  String couplersListUrl = '', couplerUrl = '';
+}

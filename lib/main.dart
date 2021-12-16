@@ -31,27 +31,19 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool isShowMuftu = false;
+  bool isShowMuftu = false, isShowSetup = false, isShowImport = false;
   Mufta mufta = Mufta(cables: [], connections: [], name: '');
+  Settings settings = Settings();
+  List<String> localStored = [];
+  String selectedName = '';
 
   @override
   void initState() {
-    //mufta.cables = [];
-    /*
-    mufta.cables.add(
-        CableEnd(fibersNumber: 8, direction: 'Федько/Лукачева', sideIndex: 0));
-    mufta.cables
-        .add(CableEnd(fibersNumber: 8, direction: 'Школа 15', sideIndex: 1));
-    mufta.cables.add(
-        CableEnd(fibersNumber: 12, direction: 'Поликлиника', sideIndex: 0));
-    //mufta.connections = [];
-    mufta.connections.add(Connection(
-        cableIndex1: 0, fiberNumber1: 0, cableIndex2: 1, fiberNumber2: 0));
-    mufta.connections.add(Connection(
-        cableIndex1: 0, fiberNumber1: 1, cableIndex2: 1, fiberNumber2: 1));
-    mufta.connections.add(Connection(
-        cableIndex1: 1, fiberNumber1: 1, cableIndex2: 1, fiberNumber2: 6));
-    */
+    loadNames().then((value) {
+      setState(() {
+        localStored = value;
+      });
+    });
     super.initState();
   }
 
@@ -70,6 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             )
           : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextButton.icon(
                     onPressed: () {
@@ -81,6 +74,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     label: const Text('Create')),
                 TextButton.icon(
                     onPressed: () {
+                      setState(() {
+                        loadNames().then((value) => localStored = value);
+                        isShowImport = !isShowImport;
+                      });
+                      /*
                       List<String> localStored = [];
                       String selectedName = '';
                       loadNames().then((value) {
@@ -150,10 +148,87 @@ class _MyHomePageState extends State<MyHomePage> {
                             });
                           }).then((value) => setState(() {
                             isShowMuftu = true;
-                          }));
+                          }));*/
                     },
                     icon: const Icon(Icons.import_export_outlined),
                     label: const Text('Import')),
+                if (isShowImport) ...[
+                  Column(
+                    children: [
+                      const Text('From Local:'),
+                      localStored.isNotEmpty
+                          ? Row(
+                              children: [
+                                DropdownButton<String>(
+                                    value: selectedName == ''
+                                        ? null
+                                        : selectedName,
+                                    items: localStored
+                                        .map((e) => DropdownMenuItem<String>(
+                                              child: Text(e),
+                                              value: e,
+                                            ))
+                                        .toList(),
+                                    onChanged: (String? variant) {
+                                      print('selection - $variant');
+                                      setState(() {
+                                        selectedName = variant!;
+                                      });
+                                    }),
+                                OutlinedButton(
+                                    onPressed: () {
+                                      print('selected:');
+                                      print(selectedName);
+                                      loadMuftaJson(selectedName).then((value) {
+                                        mufta = muftaFromJson(value);
+                                        //Navigator.pop(context);
+                                      });
+                                    },
+                                    child: const Text('Import'))
+                              ],
+                            )
+                          : const Text('nothing stored'),
+                      const Text('From REST:')
+                    ],
+                  ),
+                ],
+                TextButton.icon(
+                    onPressed: () {
+                      setState(() {
+                        isShowSetup = !isShowSetup;
+                      });
+                    },
+                    icon: const Icon(Icons.settings_outlined),
+                    label: const Text('Setup')),
+                if (isShowSetup) ...[
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      children: [
+                        //const Text('Settings'),
+                        const Text('Load list of couplers URL:'),
+                        TextFormField(
+                          initialValue: settings.couplersListUrl,
+                          onChanged: (value) =>
+                              settings.couplersListUrl = value,
+                        ),
+                        const Text('Load coupler URL:'),
+                        TextFormField(
+                          initialValue: settings.couplerUrl,
+                          onChanged: (value) => settings.couplerUrl = value,
+                        ),
+                        TextButton.icon(
+                            onPressed: () {
+                              setState(() {
+                                isShowSetup = false;
+                              });
+                            },
+                            icon: const Icon(Icons.arrow_upward_outlined),
+                            label: const Text('Hide'))
+                      ],
+                    ),
+                  ),
+                ]
               ],
             ),
     );
