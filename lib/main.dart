@@ -78,118 +78,55 @@ class _MyHomePageState extends State<MyHomePage> {
                         loadNames().then((value) => localStored = value);
                         isShowImport = !isShowImport;
                       });
-                      /*
-                      List<String> localStored = [];
-                      String selectedName = '';
-                      loadNames().then((value) {
-                        setState(() {
-                          localStored = value;
-                        });
-                      });
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return StatefulBuilder(builder:
-                                (BuildContext context, StateSetter setState) {
-                              //String muftaName = '';
-                              return AlertDialog(
-                                title: const Text('Importing'),
-                                content: Column(
-                                  children: [
-                                    const Text('From Local:'),
-                                    localStored.isNotEmpty
-                                        ? Row(
-                                            children: [
-                                              DropdownButton<String>(
-                                                  value: selectedName == ''
-                                                      ? null
-                                                      : selectedName,
-                                                  items: localStored
-                                                      .map((e) =>
-                                                          DropdownMenuItem<
-                                                              String>(
-                                                            child: Text(e),
-                                                            value: e,
-                                                          ))
-                                                      .toList(),
-                                                  onChanged: (String? variant) {
-                                                    print(
-                                                        'selection - $variant');
-                                                    setState(() {
-                                                      selectedName = variant!;
-                                                    });
-                                                  }),
-                                              OutlinedButton(
-                                                  onPressed: () {
-                                                    print('selected:');
-                                                    print(selectedName);
-                                                    loadMuftaJson(selectedName)
-                                                        .then((value) {
-                                                      mufta =
-                                                          muftaFromJson(value);
-                                                      Navigator.pop(context);
-                                                    });
-                                                  },
-                                                  child: const Text('Import'))
-                                            ],
-                                          )
-                                        : const Text('nothing stored'),
-                                    const Text('From REST:')
-                                  ],
-                                ),
-                                actions: [
-                                  OutlinedButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text('Cancel'))
-                                ],
-                              );
-                            });
-                          }).then((value) => setState(() {
-                            isShowMuftu = true;
-                          }));*/
                     },
                     icon: const Icon(Icons.import_export_outlined),
                     label: const Text('Import')),
                 if (isShowImport) ...[
-                  Column(
-                    children: [
-                      const Text('From Local:'),
-                      localStored.isNotEmpty
-                          ? Row(
-                              children: [
-                                DropdownButton<String>(
-                                    value: selectedName == ''
-                                        ? null
-                                        : selectedName,
-                                    items: localStored
-                                        .map((e) => DropdownMenuItem<String>(
-                                              child: Text(e),
-                                              value: e,
-                                            ))
-                                        .toList(),
-                                    onChanged: (String? variant) {
-                                      print('selection - $variant');
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            const Text('From Local:'),
+                            if (localStored.isNotEmpty) ...[
+                              DropdownButton<String>(
+                                  value:
+                                      selectedName == '' ? null : selectedName,
+                                  items: localStored
+                                      .map((e) => DropdownMenuItem<String>(
+                                            child: Text(e),
+                                            value: e,
+                                          ))
+                                      .toList(),
+                                  onChanged: (String? variant) {
+                                    //print('selection - $variant');
+                                    setState(() {
+                                      selectedName = variant!;
+                                    });
+                                  }),
+                              OutlinedButton(
+                                  onPressed: () {
+                                    //print('selected:');
+                                    //print(selectedName);
+                                    loadMuftaJson(selectedName).then((value) {
+                                      mufta = muftaFromJson(value);
                                       setState(() {
-                                        selectedName = variant!;
+                                        isShowImport = false;
+                                        isShowMuftu = true;
                                       });
-                                    }),
-                                OutlinedButton(
-                                    onPressed: () {
-                                      print('selected:');
-                                      print(selectedName);
-                                      loadMuftaJson(selectedName).then((value) {
-                                        mufta = muftaFromJson(value);
-                                        //Navigator.pop(context);
-                                      });
-                                    },
-                                    child: const Text('Import'))
-                              ],
-                            )
-                          : const Text('nothing stored'),
-                      const Text('From REST:')
-                    ],
+                                    });
+                                  },
+                                  child: const Text('Import'))
+                            ] else
+                              const Text('nothing stored'),
+                          ],
+                        ),
+                        const Text('From REST:')
+                      ],
+                    ),
                   ),
                 ],
                 TextButton.icon(

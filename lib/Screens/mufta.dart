@@ -29,9 +29,41 @@ class _MuftaScreenState extends State<MuftaScreen> {
     //for (var connection in widget.mufta.connections!) {print(connection.connectionData);}
     return SingleChildScrollView(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(widget.mufta.name),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Coupler name:'),
+              TextButton(
+                  onPressed: () {
+                    showDialog<String>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          String name = '';
+                          return AlertDialog(
+                            title: const Text('Name editing'),
+                            content: TextField(
+                              onChanged: (text) => name = text,
+                            ),
+                            actions: [
+                              OutlinedButton(
+                                  onPressed: () {
+                                    Navigator.pop(context, name);
+                                  },
+                                  child: const Text('Ok'))
+                            ],
+                          );
+                        }).then((value) {
+                      setState(() {
+                        widget.mufta.name = value ?? '';
+                      });
+                    });
+                  },
+                  child: Text(
+                      widget.mufta.name == '' ? 'NoName' : widget.mufta.name))
+            ],
+          ),
           //const SizedBox(height: 30,),
           GestureDetector(
             onTapDown: (details) {
@@ -65,34 +97,6 @@ class _MuftaScreenState extends State<MuftaScreen> {
                   MediaQuery.of(context).size.width, isCableSelected ?? -1),
             ),
           ),
-          TextButton.icon(
-              onPressed: () {
-                showDialog<String>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      String name = '';
-                      return AlertDialog(
-                        title: const Text('Name editing'),
-                        content: TextField(
-                          onChanged: (text) => name = text,
-                        ),
-                        actions: [
-                          OutlinedButton(
-                              onPressed: () {
-                                Navigator.pop(context, name);
-                              },
-                              child: const Text('Ok'))
-                        ],
-                      );
-                    }).then((value) {
-                  print(value);
-                  setState(() {
-                    widget.mufta.name = value ?? '';
-                  });
-                });
-              },
-              icon: const Icon(Icons.change_circle_outlined),
-              label: const Text('Change name')),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
