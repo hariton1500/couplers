@@ -15,6 +15,7 @@ class MuftaScreen extends StatefulWidget {
 class _MuftaScreenState extends State<MuftaScreen> {
   int? isCableSelected;
   int longestSideHeight = 10;
+  bool isShowAddConnections = false;
 
   @override
   Widget build(BuildContext context) {
@@ -320,6 +321,16 @@ class _MuftaScreenState extends State<MuftaScreen> {
                       icon: const Icon(Icons.add_outlined),
                       label: const Text('Add connection'))
                   : Container(),
+              isCableSelected != null && isCableSelected! >= 0
+                  ? TextButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          isShowAddConnections = !isShowAddConnections;
+                        });
+                      },
+                      icon: const Icon(Icons.add_box_outlined),
+                      label: const Text('Add connections'))
+                  : Container(),
               widget.mufta.connections.isNotEmpty
                   ? TextButton.icon(
                       icon: const Icon(Icons.delete_forever_outlined),
@@ -333,6 +344,27 @@ class _MuftaScreenState extends State<MuftaScreen> {
                   : Container(),
             ],
           ),
+          if (isShowAddConnections) ...[
+            Column(children: [
+              const Text('Add connections'),
+              Row(
+                children: List.generate(
+                    widget.mufta.cables.length,
+                    (cableIndex) => Column(
+                          children: List.generate(
+                              widget.mufta.cables[cableIndex].fibersNumber,
+                              (index) => Draggable<CableEnd>(
+                                  child: DragTarget<CableEnd>(
+                                    builder:
+                                        (context, candidateData, rejectedData) {
+                                      return Container();
+                                    },
+                                  ),
+                                  feedback: Container())),
+                        )),
+              )
+            ])
+          ],
           Row(
             children: [
               widget.mufta.cables.isNotEmpty
@@ -395,7 +427,7 @@ class _MuftaScreenState extends State<MuftaScreen> {
               TextButton.icon(
                   onPressed: () {
                     //super.widget.callback;
-                    print('call back');
+                    //print('call back');
                     widget.callback();
                   },
                   icon: const Icon(Icons.arrow_back_outlined),

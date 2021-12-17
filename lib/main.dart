@@ -44,6 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
         localStored = value;
       });
     });
+    settings.loadSettings();
     super.initState();
   }
 
@@ -55,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ? MuftaScreen(
               mufta: mufta,
               callback: () {
-                print('recieved callback');
+                //print('recieved callback');
                 setState(() {
                   isShowMuftu = false;
                 });
@@ -154,14 +155,24 @@ class _MyHomePageState extends State<MyHomePage> {
                           initialValue: settings.couplerUrl,
                           onChanged: (value) => settings.couplerUrl = value,
                         ),
-                        TextButton.icon(
-                            onPressed: () {
-                              setState(() {
-                                isShowSetup = false;
-                              });
-                            },
-                            icon: const Icon(Icons.arrow_upward_outlined),
-                            label: const Text('Hide'))
+                        Row(
+                          children: [
+                            TextButton.icon(
+                                onPressed: () {
+                                  setState(() {
+                                    isShowSetup = false;
+                                  });
+                                },
+                                icon: const Icon(Icons.arrow_upward_outlined),
+                                label: const Text('Hide')),
+                            TextButton.icon(
+                                onPressed: () {
+                                  settings.saveSettings();
+                                },
+                                icon: const Icon(Icons.save_outlined),
+                                label: const Text('Save to device')),
+                          ],
+                        )
                       ],
                     ),
                   ),

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Mufta muftaFromJson(String str) => Mufta.fromJson(json.decode(str));
 String muftaToJson(Mufta data) => json.encode(data.toJson());
@@ -104,4 +105,21 @@ class Mufta {
 
 class Settings {
   String couplersListUrl = '', couplerUrl = '';
+
+  void loadSettings() async {
+    SharedPreferences shared = await SharedPreferences.getInstance();
+    String json = shared.getString('settings') ?? '';
+    if (json != '') {
+      couplersListUrl = jsonDecode(json)['couplersListUrl'];
+      couplerUrl = jsonDecode(json)['couplerUrl'];
+    }
+  }
+
+  void saveSettings() async {
+    SharedPreferences shared = await SharedPreferences.getInstance();
+    shared.setString(
+        'settings',
+        jsonEncode(
+            {'couplersListUrl': couplersListUrl, 'couplerUrl': couplerUrl}));
+  }
 }
