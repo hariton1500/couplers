@@ -347,20 +347,54 @@ class _MuftaScreenState extends State<MuftaScreen> {
           if (isShowAddConnections) ...[
             Column(children: [
               const Text('Add connections'),
-              Row(
+              Column(
                 children: List.generate(
                     widget.mufta.cables.length,
-                    (cableIndex) => Column(
+                    (cableIndex) => Row(
                           children: List.generate(
                               widget.mufta.cables[cableIndex].fibersNumber,
-                              (index) => Draggable<CableEnd>(
-                                  child: DragTarget<CableEnd>(
+                              (fiber) => Draggable<Map<int, int>>(
+                                  data: {cableIndex: fiber},
+                                  childWhenDragging: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Container(
+                                      width: 20,
+                                      height: 20,
+                                      color: widget.mufta.colors[fiber],
+                                    ),
+                                  ),
+                                  child: DragTarget<Map<int, int>>(
+                                    onWillAccept: (data) => true,
+                                    onAccept: (data) => setState(() {
+                                      print(
+                                          'target: $cableIndex : $fiber, source: $data');
+                                      setState(() {
+                                        widget.mufta.connections.add(Connection(
+                                            cableIndex1: data.keys.first,
+                                            fiberNumber1: data.values.first,
+                                            cableIndex2: cableIndex,
+                                            fiberNumber2: fiber));
+                                      });
+                                    }),
                                     builder:
                                         (context, candidateData, rejectedData) {
-                                      return Container();
+                                      return Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Container(
+                                            width: 20,
+                                            height: 20,
+                                            color: widget.mufta.colors[fiber],
+                                            child: Center(
+                                              child:
+                                                  Text((fiber + 1).toString()),
+                                            )),
+                                      );
                                     },
                                   ),
-                                  feedback: Container())),
+                                  feedback: Material(
+                                    child: Center(
+                                        child: Text((fiber + 1).toString())),
+                                  ))),
                         )),
               )
             ])
