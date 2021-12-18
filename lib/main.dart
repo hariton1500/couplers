@@ -51,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //appBar: AppBar(title: Text(widget.title),),
+      //appBar: AppBar(),
       body: isShowMuftu
           ? MuftaScreen(
               mufta: mufta,
@@ -62,123 +62,125 @@ class _MyHomePageState extends State<MyHomePage> {
                 });
               },
             )
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        isShowMuftu = true;
-                      });
-                    },
-                    icon: const Icon(Icons.create_outlined),
-                    label: const Text('Create')),
-                TextButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        loadNames().then((value) => localStored = value);
-                        isShowImport = !isShowImport;
-                      });
-                    },
-                    icon: const Icon(Icons.import_export_outlined),
-                    label: const Text('Import')),
-                if (isShowImport) ...[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const Text('From Local:'),
-                            if (localStored.isNotEmpty) ...[
-                              DropdownButton<String>(
-                                  value:
-                                      selectedName == '' ? null : selectedName,
-                                  items: localStored
-                                      .map((e) => DropdownMenuItem<String>(
-                                            child: Text(e),
-                                            value: e,
-                                          ))
-                                      .toList(),
-                                  onChanged: (String? variant) {
-                                    //print('selection - $variant');
-                                    setState(() {
-                                      selectedName = variant!;
-                                    });
-                                  }),
-                              OutlinedButton(
-                                  onPressed: () {
-                                    //print('selected:');
-                                    //print(selectedName);
-                                    loadMuftaJson(selectedName).then((value) {
-                                      mufta = muftaFromJson(value);
+          : SafeArea(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          isShowMuftu = true;
+                        });
+                      },
+                      icon: const Icon(Icons.create_outlined),
+                      label: const Text('Create')),
+                  TextButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          loadNames().then((value) => localStored = value);
+                          isShowImport = !isShowImport;
+                        });
+                      },
+                      icon: const Icon(Icons.import_export_outlined),
+                      label: const Text('Import')),
+                  if (isShowImport) ...[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const Text('From Local:'),
+                              if (localStored.isNotEmpty) ...[
+                                DropdownButton<String>(
+                                    value:
+                                        selectedName == '' ? null : selectedName,
+                                    items: localStored
+                                        .map((e) => DropdownMenuItem<String>(
+                                              child: Text(e),
+                                              value: e,
+                                            ))
+                                        .toList(),
+                                    onChanged: (String? variant) {
+                                      //print('selection - $variant');
                                       setState(() {
-                                        isShowImport = false;
-                                        isShowMuftu = true;
+                                        selectedName = variant!;
                                       });
+                                    }),
+                                OutlinedButton(
+                                    onPressed: () {
+                                      //print('selected:');
+                                      //print(selectedName);
+                                      loadMuftaJson(selectedName).then((value) {
+                                        mufta = muftaFromJson(value);
+                                        setState(() {
+                                          isShowImport = false;
+                                          isShowMuftu = true;
+                                        });
+                                      });
+                                    },
+                                    child: const Text('Import'))
+                              ] else
+                                const Text('nothing stored'),
+                            ],
+                          ),
+                          const Text('From REST:')
+                        ],
+                      ),
+                    ),
+                  ],
+                  TextButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          isShowSetup = !isShowSetup;
+                        });
+                      },
+                      icon: const Icon(Icons.settings_outlined),
+                      label: const Text('Setup')),
+                  if (isShowSetup) ...[
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        children: [
+                          //const Text('Settings'),
+                          const Text('Load list of couplers URL:'),
+                          TextFormField(
+                            initialValue: settings.couplersListUrl,
+                            onChanged: (value) =>
+                                settings.couplersListUrl = value,
+                          ),
+                          const Text('Load coupler URL:'),
+                          TextFormField(
+                            initialValue: settings.couplerUrl,
+                            onChanged: (value) => settings.couplerUrl = value,
+                          ),
+                          Row(
+                            children: [
+                              TextButton.icon(
+                                  onPressed: () {
+                                    setState(() {
+                                      isShowSetup = false;
                                     });
                                   },
-                                  child: const Text('Import'))
-                            ] else
-                              const Text('nothing stored'),
-                          ],
-                        ),
-                        const Text('From REST:')
-                      ],
+                                  icon: const Icon(Icons.arrow_upward_outlined),
+                                  label: const Text('Hide')),
+                              TextButton.icon(
+                                  onPressed: () {
+                                    settings.saveSettings();
+                                  },
+                                  icon: const Icon(Icons.save_outlined),
+                                  label: const Text('Save to device')),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
-                  ),
+                  ]
                 ],
-                TextButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        isShowSetup = !isShowSetup;
-                      });
-                    },
-                    icon: const Icon(Icons.settings_outlined),
-                    label: const Text('Setup')),
-                if (isShowSetup) ...[
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      children: [
-                        //const Text('Settings'),
-                        const Text('Load list of couplers URL:'),
-                        TextFormField(
-                          initialValue: settings.couplersListUrl,
-                          onChanged: (value) =>
-                              settings.couplersListUrl = value,
-                        ),
-                        const Text('Load coupler URL:'),
-                        TextFormField(
-                          initialValue: settings.couplerUrl,
-                          onChanged: (value) => settings.couplerUrl = value,
-                        ),
-                        Row(
-                          children: [
-                            TextButton.icon(
-                                onPressed: () {
-                                  setState(() {
-                                    isShowSetup = false;
-                                  });
-                                },
-                                icon: const Icon(Icons.arrow_upward_outlined),
-                                label: const Text('Hide')),
-                            TextButton.icon(
-                                onPressed: () {
-                                  settings.saveSettings();
-                                },
-                                icon: const Icon(Icons.save_outlined),
-                                label: const Text('Save to device')),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ]
-              ],
-            ),
+              ),
+          ),
     );
   }
 }
