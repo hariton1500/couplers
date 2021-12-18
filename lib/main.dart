@@ -1,3 +1,4 @@
+import 'package:couplers/Screens/mufta2.dart';
 import 'package:flutter/material.dart';
 
 import 'Models/mainmodels.dart';
@@ -53,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       //appBar: AppBar(),
       body: isShowMuftu
-          ? MuftaScreen(
+          ? MuftaScreen2(
               mufta: mufta,
               callback: () {
                 //print('recieved callback');
@@ -63,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             )
           : SafeArea(
-            child: Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextButton.icon(
@@ -95,8 +96,9 @@ class _MyHomePageState extends State<MyHomePage> {
                               const Text('From Local:'),
                               if (localStored.isNotEmpty) ...[
                                 DropdownButton<String>(
-                                    value:
-                                        selectedName == '' ? null : selectedName,
+                                    value: selectedName == ''
+                                        ? null
+                                        : selectedName,
                                     items: localStored
                                         .map((e) => DropdownMenuItem<String>(
                                               child: Text(e),
@@ -180,7 +182,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ]
                 ],
               ),
-          ),
+            ),
     );
   }
 }

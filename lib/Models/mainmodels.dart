@@ -14,6 +14,24 @@ class CableEnd {
       {required this.fibersNumber,
       required this.direction,
       required this.sideIndex});
+
+  Widget widget(List<Color> colors) {
+    return Container(
+      child: Column(
+        children: List.generate(
+            fibersNumber,
+            (index) => Padding(
+                  padding: const EdgeInsets.only(bottom: 3),
+                  child: Container(
+                      color: colors[index],
+                      width: 30,
+                      height: 16,
+                      child: Center(child: Text((index + 1).toString()))),
+                )),
+      ),
+    );
+  }
+
   Map<String, dynamic> toJson() => {
         'direction': direction,
         'sideIndex': sideIndex,
