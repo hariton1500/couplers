@@ -366,8 +366,7 @@ class _MuftaScreenState extends State<MuftaScreen> {
                                   child: DragTarget<Map<int, int>>(
                                     onWillAccept: (data) => true,
                                     onAccept: (data) => setState(() {
-                                      print(
-                                          'target: $cableIndex : $fiber, source: $data');
+                                      //print('target: $cableIndex : $fiber, source: $data');
                                       setState(() {
                                         widget.mufta.connections.add(Connection(
                                             cableIndex1: data.keys.first,

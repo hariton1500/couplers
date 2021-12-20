@@ -20,14 +20,12 @@ class CableEnd {
       child: Column(
         children: List.generate(
             fibersNumber,
-            (index) => Padding(
-                  padding: const EdgeInsets.only(bottom: 3),
-                  child: Container(
-                      color: colors[index],
-                      width: 30,
-                      height: 16,
-                      child: Center(child: Text((index + 1).toString()))),
-                )),
+            (index) => Container(
+                decoration: BoxDecoration(border: Border.all(color: Colors.black), color: colors[index]),
+                //color: colors[index],
+                width: 30,
+                height: 16,
+                child: Center(child: Text((index + 1).toString(), style: TextStyle(color: (index == 7 || index == 19) ? Colors.white : Colors.black),)))),
       ),
     );
   }
