@@ -1,4 +1,5 @@
 //import 'package:couplers/Screens/mufta2.dart';
+import 'package:couplers/Helpers/strings.dart';
 import 'package:flutter/material.dart';
 
 import 'Models/mainmodels.dart';
@@ -75,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         });
                       },
                       icon: const Icon(Icons.create_outlined),
-                      label: const Text('Create')),
+                      label: TranslateText('Create')),
                   TextButton.icon(
                       onPressed: () {
                         setState(() {
@@ -84,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         });
                       },
                       icon: const Icon(Icons.import_export_outlined),
-                      label: const Text('Import')),
+                      label: TranslateText('Import')),
                   if (isShowImport) ...[
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -94,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              const Text('From Local:'),
+                              TranslateText('From Local:'),
                               if (localStored.isNotEmpty) ...[
                                 DropdownButton<String>(
                                     value: selectedName == ''
@@ -124,12 +125,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                         });
                                       });
                                     },
-                                    child: const Text('Import'))
+                                    child: TranslateText('Import'))
                               ] else
-                                const Text('nothing stored'),
+                                TranslateText('nothing stored'),
                             ],
                           ),
-                          const Text('From REST:')
+                          TranslateText('From REST:')
                         ],
                       ),
                     ),
@@ -141,20 +142,20 @@ class _MyHomePageState extends State<MyHomePage> {
                         });
                       },
                       icon: const Icon(Icons.settings_outlined),
-                      label: const Text('Setup')),
+                      label: TranslateText('Setup')),
                   if (isShowSetup) ...[
                     Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Column(
                         children: [
-                          //const Text('Settings'),
-                          const Text('Load list of couplers URL:'),
+                          //TranslateText('Settings'),
+                          TranslateText('Load list of couplers URL:'),
                           TextFormField(
                             initialValue: settings.couplersListUrl,
                             onChanged: (value) =>
                                 settings.couplersListUrl = value,
                           ),
-                          const Text('Load coupler URL:'),
+                          TranslateText('Load coupler URL:'),
                           TextFormField(
                             initialValue: settings.couplerUrl,
                             onChanged: (value) => settings.couplerUrl = value,
@@ -168,13 +169,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                     });
                                   },
                                   icon: const Icon(Icons.arrow_upward_outlined),
-                                  label: const Text('Hide')),
+                                  label: TranslateText('Hide')),
                               TextButton.icon(
                                   onPressed: () {
                                     settings.saveSettings();
                                   },
                                   icon: const Icon(Icons.save_outlined),
-                                  label: const Text('Save to device')),
+                                  label: TranslateText('Save to device')),
                             ],
                           )
                         ],
