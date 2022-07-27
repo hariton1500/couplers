@@ -1,4 +1,4 @@
-import 'package:couplers/Screens/mufta2.dart';
+//import 'package:couplers/Screens/mufta2.dart';
 import 'package:flutter/material.dart';
 
 import 'Models/mainmodels.dart';
@@ -55,6 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
       //appBar: AppBar(),
       body: isShowMuftu
           ? MuftaScreen(
+              lang: 'ru',
               mufta: mufta,
               callback: () {
                 //print('recieved callback');
