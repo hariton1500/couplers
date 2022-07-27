@@ -86,7 +86,7 @@ class _MuftaScreen2State extends State<MuftaScreen2> {
                   .map((cable) {
                     return Positioned(
                       left: 50,
-                      top: sidePos[0],
+                      top: sidePos[0].toDouble(),
                       child: Container(
                         decoration: BoxDecoration(
                           border: Border.all(

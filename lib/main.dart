@@ -54,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       //appBar: AppBar(),
       body: isShowMuftu
-          ? MuftaScreen2(
+          ? MuftaScreen(
               mufta: mufta,
               callback: () {
                 //print('recieved callback');
