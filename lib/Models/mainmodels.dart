@@ -16,17 +16,24 @@ class CableEnd {
       required this.sideIndex});
 
   Widget widget(List<Color> colors) {
-    return Container(
-      child: Column(
-        children: List.generate(
-            fibersNumber,
-            (index) => Container(
-                decoration: BoxDecoration(border: Border.all(color: Colors.black), color: colors[index]),
-                //color: colors[index],
-                width: 30,
-                height: 16,
-                child: Center(child: Text((index + 1).toString(), style: TextStyle(color: (index == 7 || index == 19) ? Colors.white : Colors.black),)))),
-      ),
+    return Column(
+      children: List.generate(
+          fibersNumber,
+          (index) => Container(
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black),
+                  color: colors[index]),
+              //color: colors[index],
+              width: 30,
+              height: 16,
+              child: Center(
+                  child: Text(
+                (index + 1).toString(),
+                style: TextStyle(
+                    color: (index == 7 || index == 19)
+                        ? Colors.white
+                        : Colors.black),
+              )))),
     );
   }
 
@@ -120,15 +127,13 @@ class Mufta {
 }
 
 class Settings {
-  String couplersListUrl = '', couplerUrl = '';
+  String couplersListUrl = '', couplerUrl = '', language = 'en';
 
   void loadSettings() async {
     SharedPreferences shared = await SharedPreferences.getInstance();
-    String json = shared.getString('settings') ?? '';
-    if (json != '') {
-      couplersListUrl = jsonDecode(json)['couplersListUrl'];
-      couplerUrl = jsonDecode(json)['couplerUrl'];
-    }
+    couplersListUrl = shared.getString('couplersListUrl') ?? '';
+    couplerUrl = shared.getString('couplerUrl') ?? '';
+    language = shared.getString('language') ?? 'en';
   }
 
   void saveSettings() async {
