@@ -639,7 +639,9 @@ class MuftaPainter extends CustomPainter {
 
 void saveToLocal(Mufta mufta) async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-  sharedPreferences.setString(mufta.name, muftaToJson(mufta));
+  String jsonString = muftaToJson(mufta);
+  print(jsonString);
+  sharedPreferences.setString(mufta.name, jsonString);
 }
 
 Future<List<String>> loadNames() async {

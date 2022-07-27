@@ -46,7 +46,9 @@ class _MyHomePageState extends State<MyHomePage> {
         localStored = value;
       });
     });
-    settings.loadSettings();
+    settings.loadSettings().then((value) {
+      setState(() {});
+    });
     super.initState();
   }
 
@@ -56,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
       //appBar: AppBar(),
       body: isShowMuftu
           ? MuftaScreen(
-              lang: 'ru',
+              lang: settings.language,
               mufta: mufta,
               callback: () {
                 //print('recieved callback');
@@ -70,13 +72,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextButton.icon(
-                      onPressed: () {
-                        setState(() {
-                          isShowMuftu = true;
-                        });
-                      },
-                      icon: const Icon(Icons.create_outlined),
-                      label: TranslateText('Create')),
+                    onPressed: () {
+                      setState(() {
+                        isShowMuftu = true;
+                      });
+                    },
+                    icon: const Icon(Icons.create_outlined),
+                    label: TranslateText(
+                      'Create',
+                      language: settings.language,
+                    ),
+                  ),
                   TextButton.icon(
                       onPressed: () {
                         setState(() {
@@ -85,7 +91,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         });
                       },
                       icon: const Icon(Icons.import_export_outlined),
-                      label: TranslateText('Import')),
+                      label:
+                          TranslateText('Import', language: settings.language)),
                   if (isShowImport) ...[
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -95,7 +102,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              TranslateText('From Local:'),
+                              TranslateText('From Local:',
+                                  language: settings.language),
                               if (localStored.isNotEmpty) ...[
                                 DropdownButton<String>(
                                     value: selectedName == ''
@@ -125,12 +133,15 @@ class _MyHomePageState extends State<MyHomePage> {
                                         });
                                       });
                                     },
-                                    child: TranslateText('Import'))
+                                    child: TranslateText('Import',
+                                        language: settings.language))
                               ] else
-                                TranslateText('nothing stored'),
+                                TranslateText('nothing stored',
+                                    language: settings.language),
                             ],
                           ),
-                          TranslateText('From REST:')
+                          TranslateText('From REST:',
+                              language: settings.language)
                         ],
                       ),
                     ),
@@ -142,20 +153,23 @@ class _MyHomePageState extends State<MyHomePage> {
                         });
                       },
                       icon: const Icon(Icons.settings_outlined),
-                      label: TranslateText('Setup')),
+                      label:
+                          TranslateText('Setup', language: settings.language)),
                   if (isShowSetup) ...[
                     Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Column(
                         children: [
                           //TranslateText('Settings'),
-                          TranslateText('Load list of couplers URL:'),
+                          TranslateText('Load list of couplers URL:',
+                              language: settings.language),
                           TextFormField(
                             initialValue: settings.couplersListUrl,
                             onChanged: (value) =>
                                 settings.couplersListUrl = value,
                           ),
-                          TranslateText('Load coupler URL:'),
+                          TranslateText('Load coupler URL:',
+                              language: settings.language),
                           TextFormField(
                             initialValue: settings.couplerUrl,
                             onChanged: (value) => settings.couplerUrl = value,
@@ -169,13 +183,15 @@ class _MyHomePageState extends State<MyHomePage> {
                                     });
                                   },
                                   icon: const Icon(Icons.arrow_upward_outlined),
-                                  label: TranslateText('Hide')),
+                                  label: TranslateText('Hide',
+                                      language: settings.language)),
                               TextButton.icon(
                                   onPressed: () {
                                     settings.saveSettings();
                                   },
                                   icon: const Icon(Icons.save_outlined),
-                                  label: TranslateText('Save to device')),
+                                  label: TranslateText('Save to device',
+                                      language: settings.language)),
                             ],
                           )
                         ],

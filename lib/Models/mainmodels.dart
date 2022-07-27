@@ -129,7 +129,7 @@ class Mufta {
 class Settings {
   String couplersListUrl = '', couplerUrl = '', language = 'en';
 
-  void loadSettings() async {
+  Future loadSettings() async {
     SharedPreferences shared = await SharedPreferences.getInstance();
     couplersListUrl = shared.getString('couplersListUrl') ?? '';
     couplerUrl = shared.getString('couplerUrl') ?? '';
