@@ -1,6 +1,9 @@
 import 'package:couplers/Models/mainmodels.dart';
+import 'package:couplers/Screens/location_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:latlong/latlong.dart';
 
 import '../Helpers/strings.dart';
 
@@ -71,7 +74,23 @@ class _MuftaScreenState extends State<MuftaScreen> {
                     });
                   },
                   child: TranslateText(
-                      widget.mufta.name == '' ? 'NoName' : widget.mufta.name))
+                      widget.mufta.name == '' ? 'NoName' : widget.mufta.name)),
+              TextButton(
+                  onPressed: () => showDialog<Coords>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: TranslateText(
+                            'Location Picker',
+                            language: widget.lang,
+                          ),
+                          content: const LocationPicker(),
+                        );
+                      }),
+                  child: TranslateText(
+                    'Pick it`s Location',
+                    language: widget.lang,
+                  ))
             ],
           ),
           //const SizedBox(height: 30,),
