@@ -5,7 +5,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../Helpers/strings.dart';
 
 class MuftaScreen extends StatefulWidget {
-  const MuftaScreen({Key? key, required this.mufta, required this.callback, required this.lang})
+  const MuftaScreen(
+      {Key? key,
+      required this.mufta,
+      required this.callback,
+      required this.lang})
       : super(key: key);
   final Mufta mufta;
   final Function callback;
@@ -46,7 +50,8 @@ class _MuftaScreenState extends State<MuftaScreen> {
                         builder: (BuildContext context) {
                           String name = '';
                           return AlertDialog(
-                            title: TranslateText('Name editing', language: widget.lang),
+                            title: TranslateText('Name editing',
+                                language: widget.lang),
                             content: TextField(
                               onChanged: (text) => name = text,
                             ),
@@ -55,7 +60,8 @@ class _MuftaScreenState extends State<MuftaScreen> {
                                   onPressed: () {
                                     Navigator.pop(context, name);
                                   },
-                                  child: TranslateText('Ok', language: widget.lang))
+                                  child: TranslateText('Ok',
+                                      language: widget.lang))
                             ],
                           );
                         }).then((value) {
@@ -112,17 +118,21 @@ class _MuftaScreenState extends State<MuftaScreen> {
                           String cableName = '';
                           int fibersNumber = 1;
                           List<DropdownMenuItem<int>> fibersList =
-                              [1, 2, 4, 8, 12, 16, 20, 24, 36, 48].map((e) => DropdownMenuItem<int>(
-                                    value: e,
-                                    child: Text(e.toString()),
-                                  )).toList();
+                              [1, 2, 4, 8, 12, 16, 20, 24, 36, 48]
+                                  .map((e) => DropdownMenuItem<int>(
+                                        value: e,
+                                        child: Text(e.toString()),
+                                      ))
+                                  .toList();
                           return StatefulBuilder(builder:
                               (BuildContext context, StateSetter setState) {
                             return AlertDialog(
-                              title: TranslateText('Adding of cable', language: widget.lang),
+                              title: TranslateText('Adding of cable',
+                                  language: widget.lang),
                               content: Column(
                                 children: [
-                                  TranslateText('Direction:', language: widget.lang),
+                                  TranslateText('Direction:',
+                                      language: widget.lang),
                                   TextField(
                                     keyboardType: TextInputType.text,
                                     onChanged: (text) {
@@ -131,7 +141,8 @@ class _MuftaScreenState extends State<MuftaScreen> {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: TranslateText('Number of Fibers:', language: widget.lang),
+                                    child: TranslateText('Number of Fibers:',
+                                        language: widget.lang),
                                   ),
                                   DropdownButton<int>(
                                       value: fibersNumber,
@@ -150,7 +161,8 @@ class _MuftaScreenState extends State<MuftaScreen> {
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
-                                    child: TranslateText('Cancel', language: widget.lang)),
+                                    child: TranslateText('Cancel',
+                                        language: widget.lang)),
                                 OutlinedButton(
                                     onPressed: () {
                                       Navigator.of(context).pop(CableEnd(
@@ -158,7 +170,8 @@ class _MuftaScreenState extends State<MuftaScreen> {
                                           fibersNumber: fibersNumber,
                                           sideIndex: 0));
                                     },
-                                    child: TranslateText('Add', language: widget.lang))
+                                    child: TranslateText('Add',
+                                        language: widget.lang))
                               ],
                             );
                           });
@@ -183,7 +196,8 @@ class _MuftaScreenState extends State<MuftaScreen> {
                         //print(jsonEncode(widget.mufta));
                       },
                       icon: const Icon(Icons.change_circle_outlined),
-                      label: TranslateText('Change side', language: widget.lang))
+                      label:
+                          TranslateText('Change side', language: widget.lang))
                   : Container(),
               isCableSelected != null && isCableSelected! >= 0
                   ? TextButton.icon(
@@ -198,7 +212,8 @@ class _MuftaScreenState extends State<MuftaScreen> {
                         });
                       },
                       icon: const Icon(Icons.remove_outlined),
-                      label: TranslateText('Delete cable', language: widget.lang))
+                      label:
+                          TranslateText('Delete cable', language: widget.lang))
                   : Container(),
             ],
           ),
@@ -221,14 +236,16 @@ class _MuftaScreenState extends State<MuftaScreen> {
                                           .fibersNumber,
                                       (index) => DropdownMenuItem(
                                           value: index + 1,
-                                          child: TranslateText((index + 1).toString())));
+                                          child: TranslateText(
+                                              (index + 1).toString())));
                               List<DropdownMenuItem<int>> fibers2 =
                                   List.generate(
                                       widget.mufta.cables[cableIndex2]
                                           .fibersNumber,
                                       (index) => DropdownMenuItem(
                                           value: index + 1,
-                                          child: TranslateText((index + 1).toString())));
+                                          child: TranslateText(
+                                              (index + 1).toString())));
                               //print(fibers2.length);
                               List<DropdownMenuItem<int>> cables =
                                   List.generate(
@@ -245,18 +262,21 @@ class _MuftaScreenState extends State<MuftaScreen> {
                                         .mufta.cables[cableIndex2].fibersNumber,
                                     (index) => DropdownMenuItem(
                                         value: index + 1,
-                                        child: TranslateText((index + 1).toString())));
+                                        child: TranslateText(
+                                            (index + 1).toString())));
                                 return AlertDialog(
-                                  title: TranslateText('Add connection', language: widget.lang),
+                                  title: TranslateText('Add connection',
+                                      language: widget.lang),
                                   content: Column(
                                     children: [
-                                      TranslateText('From:', language: widget.lang),
+                                      TranslateText('From:',
+                                          language: widget.lang),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
                                         children: [
-                                          TranslateText(widget.mufta.cables[cableIndex1]
-                                              .direction),
+                                          TranslateText(widget.mufta
+                                              .cables[cableIndex1].direction),
                                           DropdownButton<int>(
                                             value: fiberNumber1,
                                             items: fibers1,
@@ -300,7 +320,8 @@ class _MuftaScreenState extends State<MuftaScreen> {
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
-                                        child: TranslateText('Cancel', language: widget.lang)),
+                                        child: TranslateText('Cancel',
+                                            language: widget.lang)),
                                     OutlinedButton(
                                         onPressed: () {
                                           Navigator.of(context).pop(Connection(
@@ -309,7 +330,8 @@ class _MuftaScreenState extends State<MuftaScreen> {
                                               cableIndex2: cableIndex2,
                                               fiberNumber2: fiberNumber2 - 1));
                                         },
-                                        child: TranslateText('Add', language: widget.lang))
+                                        child: TranslateText('Add',
+                                            language: widget.lang))
                                   ],
                                 );
                               });
@@ -320,7 +342,8 @@ class _MuftaScreenState extends State<MuftaScreen> {
                             }));
                       },
                       icon: const Icon(Icons.add_outlined),
-                      label: TranslateText('Add connection', language: widget.lang))
+                      label: TranslateText('Add connection',
+                          language: widget.lang))
                   : Container(),
               isCableSelected != null && isCableSelected! >= 0
                   ? TextButton.icon(
@@ -330,7 +353,8 @@ class _MuftaScreenState extends State<MuftaScreen> {
                         });
                       },
                       icon: const Icon(Icons.add_box_outlined),
-                      label: TranslateText('Add connections', language: widget.lang))
+                      label: TranslateText('Add connections',
+                          language: widget.lang))
                   : Container(),
               widget.mufta.connections.isNotEmpty
                   ? TextButton.icon(
@@ -340,7 +364,8 @@ class _MuftaScreenState extends State<MuftaScreen> {
                           widget.mufta.connections.clear();
                         });
                       },
-                      label: TranslateText('Delete all connections', language: widget.lang),
+                      label: TranslateText('Delete all connections',
+                          language: widget.lang),
                     )
                   : Container(),
             ],
@@ -385,15 +410,16 @@ class _MuftaScreenState extends State<MuftaScreen> {
                                             height: 20,
                                             color: widget.mufta.colors[fiber],
                                             child: Center(
-                                              child:
-                                                  TranslateText((fiber + 1).toString()),
+                                              child: TranslateText(
+                                                  (fiber + 1).toString()),
                                             )),
                                       );
                                     },
                                   ),
                                   feedback: Material(
                                     child: Center(
-                                        child: TranslateText((fiber + 1).toString())),
+                                        child: TranslateText(
+                                            (fiber + 1).toString())),
                                   ))),
                         )),
               )
@@ -418,7 +444,8 @@ class _MuftaScreenState extends State<MuftaScreen> {
                               return StatefulBuilder(builder:
                                   (BuildContext context, StateSetter setState) {
                                 return AlertDialog(
-                                  title: TranslateText('Export', language: widget.lang),
+                                  title: TranslateText('Export',
+                                      language: widget.lang),
                                   content: Column(
                                     children: [
                                       DropdownButton<String>(
@@ -516,12 +543,16 @@ class MuftaPainter extends CustomPainter {
 
     double yPos0 = 20, yPos1 = 20;
     for (var cable in mufta.cables) {
-
       var tpDirection = TextPainter(
           text: TextSpan(
-              text: cable.direction, style: mufta.cables.indexOf(cable) != selectedCableIndex ? const TextStyle(fontSize: 10, color: Colors.black) : const TextStyle(fontSize: 11, color: Colors.red, fontWeight: FontWeight.bold)),
-          textDirection: TextDirection.ltr
-      );
+              text: cable.direction,
+              style: mufta.cables.indexOf(cable) != selectedCableIndex
+                  ? const TextStyle(fontSize: 10, color: Colors.black)
+                  : const TextStyle(
+                      fontSize: 11,
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold)),
+          textDirection: TextDirection.ltr);
       tpDirection.layout();
       if (cable.sideIndex == 0) {
         tpDirection.paint(canvas, Offset(st - 30, yPos0 - 17));
