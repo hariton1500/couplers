@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Mufta muftaFromJson(String str) => Mufta.fromJson(json.decode(str));
@@ -102,20 +103,24 @@ class Mufta {
     Colors.pink,
     Colors.indigo
   ];
+
   Mufta({
     required this.name,
     required this.cables,
-    required this.connections,
+    required this.connections, this.location,
   });
 
   String name = '';
   List<CableEnd> cables = [];
   List<Connection> connections = [];
+  LatLng? location;
+
   Map<String, dynamic> toJson() => {
         //'colors' : colors,
         'name': name,
         'cables': cables, //?.map((e) => e.toJson()).toList(),
-        'connections': connections //?.map((e) => e.toJson()).toList()
+        'connections': connections, //?.map((e) => e.toJson()).toList()
+        'location': location?.toJson()
       };
   factory Mufta.fromJson(Map<String, dynamic> json) => Mufta(
         name: json["name"],
@@ -123,6 +128,7 @@ class Mufta {
             json["cables"].map((x) => CableEnd.fromJson(x))),
         connections: List<Connection>.from(
             json["connections"].map((x) => Connection.fromJson(x))),
+        location: json["location"]
       );
 }
 

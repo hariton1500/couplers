@@ -28,6 +28,7 @@ class _LocationPickerState extends State<LocationPicker> {
             onTap: (tapPos, latlng) {
               print(latlng.toString());
               setState(() {
+                _markers.clear();
                 _markers.add(Marker(
                   //width: 80.0,
                   //height: 80.0,
@@ -39,6 +40,7 @@ class _LocationPickerState extends State<LocationPicker> {
                   ),
                 ));
               });
+              Navigator.of(context).pop(latlng);
           //markLocation(latlng);
         }),
         layers: [

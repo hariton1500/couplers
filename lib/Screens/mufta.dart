@@ -2,7 +2,7 @@ import 'package:couplers/Models/mainmodels.dart';
 import 'package:couplers/Screens/location_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-//import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart' as ll;
 
 import '../Helpers/strings.dart';
 
@@ -75,7 +75,7 @@ class _MuftaScreenState extends State<MuftaScreen> {
                   child: TranslateText(
                       widget.mufta.name == '' ? 'NoName' : widget.mufta.name)),
               TextButton(
-                  onPressed: () => showDialog<Offset>(
+                  onPressed: () => showDialog<ll.LatLng>(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
@@ -85,9 +85,11 @@ class _MuftaScreenState extends State<MuftaScreen> {
                           ),
                           content: const LocationPicker(),
                         );
-                      }),
+                      }).then((value) => setState(() {
+                            widget.mufta.location = value;
+                          })),
                   child: TranslateText(
-                    'Pick it`s Location',
+                    'Location' ' ' + (widget.mufta.location != null ? widget.mufta.location!.toJson()['coordinates'].toString() : ''),
                     language: widget.lang,
                   ))
             ],
