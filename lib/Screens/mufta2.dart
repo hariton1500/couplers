@@ -1,6 +1,5 @@
 import 'package:couplers/Models/mainmodels.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MuftaScreen2 extends StatefulWidget {
   const MuftaScreen2({Key? key, required this.mufta, required this.callback})
