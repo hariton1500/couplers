@@ -1,7 +1,6 @@
 import 'package:couplers/Models/mainmodels.dart';
 import 'package:couplers/Screens/location_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 //import 'package:latlong/latlong.dart';
 
@@ -76,7 +75,7 @@ class _MuftaScreenState extends State<MuftaScreen> {
                   child: TranslateText(
                       widget.mufta.name == '' ? 'NoName' : widget.mufta.name)),
               TextButton(
-                  onPressed: () => showDialog<Coords>(
+                  onPressed: () => showDialog<Offset>(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
